@@ -35,7 +35,7 @@ router.post(
       if (user) {
         return res
           .status(400)
-          .json({ errors: ['User already exists with this email'] });
+          .json({ errors: [{ msg: 'User already exists with this email' }] });
       }
 
       // Get users Gravitar
