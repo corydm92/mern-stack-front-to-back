@@ -78,8 +78,6 @@ router.post(
           res.json({ token });
         }
       );
-
-      // res.send('User Regestered');
     } catch (err) {
       return res.status(500).send(err.message);
     }
