@@ -160,4 +160,60 @@ router.delete('/user/:user_id', auth, async (req, res) => {
   } catch (err) {}
 });
 
+// @route   PUT api/profile/experience
+// @desc    PUT user experience
+// @access  Private
+router.put(
+  '/experience',
+  [
+    auth,
+    [
+      check('title', 'Title is Required').not().isEmpty(),
+      check('company', 'Company is required').not().isEmpty(),
+      check('from', 'From date is required').not().isEmpty(),
+      check('current', 'Current position is required').isBoolean(),
+    ],
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const {
+      title, // Required
+      company, // Required
+      location,
+      from, // Required
+      to,
+      current,
+      description,
+    } = req.body;
+
+    const experienceObj = {
+      title,
+      company,
+      location,
+      from,
+      to,
+      current: !to ? true : current,
+      description,
+    };
+
+    try {
+      let profile = await Profile.findOne({ user: req.user.id });
+
+      profile.experience.unshift(experienceObj); // Unshift adds object to beginning of array
+
+      await profile.save();
+
+      res.status(200).json(profile);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
+);
+
 module.exports = router;
