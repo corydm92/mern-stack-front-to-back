@@ -8,7 +8,7 @@ const config = require('config');
 const bcrypt = require('bcryptjs');
 
 // @route   GET api/auth
-// @desc    Test Route
+// @desc    Fetch User Data
 // @access  Public
 router.get('/', auth, async (req, res) => {
   try {
