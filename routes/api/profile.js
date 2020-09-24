@@ -6,10 +6,6 @@ const { check, validationResult } = require('express-validator');
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 
-//
-
-//
-
 // @route   GET api/profile/me
 // @desc    Get Current User Profile Route
 // @access  Private
@@ -110,5 +106,36 @@ router.post(
     }
   }
 );
+
+// @route   GET api/profile/
+// @desc    Get all user profiles
+// @access  Public
+router.get('/', async (req, res) => {
+  try {
+    const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+
+    res.status(200).json(profiles);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   GET api/profile/user/:user_id
+// @desc    Get profile by user id
+// @access  Public
+router.get('/user/:user_id', async (req, res) => {
+  console.log(req.params);
+  try {
+    const profile = await Profile.find({
+      user: req.params.user_id, // Specifiy 'user' instead of 'user._id' because user is just the id in the model. We bring out user id/name/avatar in populate.
+    }).populate('user', ['name', 'avatar']);
+
+    res.status(200).json(profile);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 module.exports = router;
