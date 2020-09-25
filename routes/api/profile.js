@@ -261,4 +261,58 @@ router.delete('/experience/:experience_id', auth, async (req, res) => {
   }
 });
 
+// @route   PUT api/profile/education
+// @desc    PUT user education
+// @access  Private
+router.put(
+  '/education',
+  [
+    auth,
+    [
+      check('school', 'School is required').not().isEmpty(),
+      check('degree', 'Degree is required').notEmpty(),
+    ],
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const {
+      title, // Required
+      company, // Required
+      location,
+      from, // Required
+      to,
+      current,
+      description,
+    } = req.body;
+
+    const experienceObj = {
+      title,
+      company,
+      location,
+      from,
+      to,
+      current: !to ? true : current,
+      description,
+    };
+
+    try {
+      let profile = await Profile.findOne({ user: req.user.id });
+
+      profile.experience.unshift(experienceObj); // Unshift adds object to beginning of array
+
+      await profile.save();
+
+      res.status(200).json(profile);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
+);
+
 module.exports = router;
