@@ -225,6 +225,8 @@ router.delete('/experience/:experience_id', auth, async (req, res) => {
 
   try {
     // Single Method Approach
+    // If using this approach, nothing below this method is used for our DELETE request
+    //
     // await Profile.updateOne(
     //   { user: userID },
     //   { $pull: { experience: { _id: experienceID } } }, // Pull from the experience array an experience that matches our ID
