@@ -269,8 +269,11 @@ router.put(
   [
     auth,
     [
-      check('school', 'School is required').not().isEmpty(),
+      check('school', 'School is required').notEmpty(),
       check('degree', 'Degree is required').notEmpty(),
+      check('fieldofstudy', 'Field of Study is required').notEmpty(),
+      check('from', 'From date is required').notEmpty(),
+      check('current', 'Currently Enrolled is required').isBoolean(),
     ],
   ],
   async (req, res) => {
@@ -281,21 +284,23 @@ router.put(
     }
 
     const {
-      title, // Required
-      company, // Required
-      location,
+      school, // Required
+      degree, // Required
+      fieldofstudy, // Required
       from, // Required
       to,
-      current,
+      title,
+      current, // Required
       description,
     } = req.body;
 
-    const experienceObj = {
-      title,
-      company,
-      location,
+    const educationObj = {
+      school,
+      degree,
+      fieldofstudy,
       from,
       to,
+      title,
       current: !to ? true : current,
       description,
     };
@@ -303,7 +308,7 @@ router.put(
     try {
       let profile = await Profile.findOne({ user: req.user.id });
 
-      profile.experience.unshift(experienceObj); // Unshift adds object to beginning of array
+      profile.education.unshift(educationObj); // Unshift adds object to beginning of array
 
       await profile.save();
 
@@ -314,5 +319,34 @@ router.put(
     }
   }
 );
+
+// @route   DELETE api/profile/education/:education_id
+// @desc    DELETE user education
+// @access  Private
+router.delete('/education/:education_id', auth, async (req, res) => {
+  const userID = req.user.id;
+  const educationID = req.params.education_id;
+
+  try {
+    const profile = await Profile.findOne({
+      user: userID,
+    });
+
+    // Using Mongoose pull method
+    profile.education = profile.education.reduce((acc, current) => {
+      if (current.id !== educationID) {
+        return current;
+      }
+      return acc;
+    }, []);
+
+    await profile.save();
+
+    res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 module.exports = router;
