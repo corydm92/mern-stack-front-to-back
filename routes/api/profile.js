@@ -216,4 +216,47 @@ router.put(
   }
 );
 
+// @route   DELETE api/profile/experience/:experience_id
+// @desc    DELETE user experience
+// @access  Private
+router.delete('/experience/:experience_id', auth, async (req, res) => {
+  const userID = req.user.id;
+  const experienceID = req.params.experience_id;
+
+  try {
+    // Single Method Approach
+    // await Profile.updateOne(
+    //   { user: userID },
+    //   { $pull: { experience: { _id: experienceID } } }, // Pull from the experience array an experience that matches our ID
+    //   {},
+    //   function (err, numAffected) {
+    //     console.log(err);
+    //     if (err) return res.status(400).json({ msg: err.message });
+    //     return res.status(200).json(numAffected);
+    //   }
+    // );
+
+    const profile = await Profile.findOne({
+      user: userID,
+    });
+
+    // Using Mongoose pull method
+    // profile.experience.pull(experienceID); // Pull removes a subdocument, passing in just the id of that subdocument as an arg
+
+    profile.experience = profile.experience.reduce((acc, current) => {
+      if (current.id !== experienceID) {
+        return current;
+      }
+      return acc;
+    }, []);
+
+    await profile.save();
+
+    res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
