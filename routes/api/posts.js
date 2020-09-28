@@ -3,6 +3,7 @@ const router = express.Router();
 const auth = require('../../middleware/auth');
 const Post = require('../../models/Post');
 const User = require('../../models/User');
+const Profile = require('../../models/Profile');
 const { check, validationResult } = require('express-validator');
 
 // @route   GET api/posts
@@ -15,7 +16,7 @@ router.get('/', (req, res) => res.send('Posts Route'));
 // @access  Private
 router.post(
   '/',
-  [auth, [check('text', 'Text is required').not().isEmpty()]],
+  [auth, [check('text', 'Text is required').notEmpty()]],
   async (req, res) => {
     const errors = validationResult(req);
 
@@ -23,18 +24,17 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const user = await User.findById(req.user.id);
-
-    const { text } = req.body;
-
-    const postOptions = {
-      text,
-      name: user.name,
-      avatar: user.avatar,
-      user: user.id,
-    };
-
     try {
+      const user = await User.findById(req.user.id).select('-password');
+
+      const { text } = req.body;
+
+      const postOptions = {
+        text,
+        name: user.name,
+        avatar: user.avatar,
+        user: user.id,
+      };
       const post = new Post(postOptions);
 
       post.save();
