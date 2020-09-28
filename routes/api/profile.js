@@ -153,13 +153,16 @@ router.delete('/user/:user_id', auth, async (req, res) => {
     // @todo - Delete User Posts
 
     // Delete User Profile
-    await Profile.findOneAndDelete(req.user.id);
+    await Profile.findOneAndDelete({ user: req.user.id });
 
     // Delete User
     await User.findByIdAndDelete(req.user.id);
 
     res.status(200).json({ msg: 'Deleted User' });
-  } catch (err) {}
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
 });
 
 // @route   PUT api/profile/experience
