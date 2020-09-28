@@ -6,11 +6,6 @@ const User = require('../../models/User');
 const Profile = require('../../models/Profile');
 const { check, validationResult } = require('express-validator');
 
-// @route   GET api/posts
-// @desc    Test Route
-// @access  Public
-router.get('/', (req, res) => res.send('Posts Route'));
-
 // @route   POST api/posts/
 // @desc    Create new post
 // @access  Private
@@ -46,5 +41,19 @@ router.post(
     }
   }
 );
+
+// @route   GET api/posts
+// @desc    Test Route
+// @access  Public
+router.get('/', async (req, res) => {
+  try {
+    const posts = await Post.find();
+
+    res.json(posts);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 module.exports = router;
