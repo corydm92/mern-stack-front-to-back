@@ -119,13 +119,16 @@ router.put('/:id/like', auth, async (req, res) => {
     if (!post) return res.status(400).json({ msg: 'Post not found' });
 
     // Check if likes array already contains user ID
-    if (!post.likes.some((like) => like.id === req.user.id)) {
+    if (!post.likes.some((like) => like.user.toString() === req.user.id)) {
       // If not in array, like
-      post.likes.unshift(req.user.id);
+      //
+      // We need to push an object with the key value pair of user: id, becauses that is what the relationship is looking for.
+      // This allows us to query subdocuments by populate('likes.user')
+      post.likes.unshift({ user: req.user.id });
     } else {
       // If in array, unlike
       post.likes = post.likes.filter(
-        (like) => like.id.toString() !== req.user.id
+        (like) => like.user.toString() !== req.user.id
       );
     }
 
