@@ -75,10 +75,10 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
-// @route   DELETE api/posts
+// @route   DELETE api/posts/:id
 // @desc    Delete a post
 // @access  Private
-router.delete('/:post_id', auth, async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
   try {
     // Get User
     const userId = req.user.id;
@@ -87,6 +87,8 @@ router.delete('/:post_id', auth, async (req, res) => {
     const postId = req.params.post_id;
 
     const post = await Post.findById(postId);
+
+    if (!post) return res.status(404).json({ msg: 'Post not found' });
 
     // Must use toString to match type, without post.user is type object
     if (userId !== post.user.toString()) {
@@ -98,6 +100,44 @@ router.delete('/:post_id', auth, async (req, res) => {
     res.send('Post deleted');
   } catch (err) {
     console.error(err.message);
+
+    if (err.kind === 'ObjectId')
+      return res.status(400).json({ msg: 'Post not found' });
+
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   PUT api/posts/:id/like
+// @desc    Like a post
+// @access  Private
+router.put('/:id/like', auth, async (req, res) => {
+  try {
+    // Get post
+    let post = await Post.findById(req.params.id);
+
+    if (!post) return res.status(400).json({ msg: 'Post not found' });
+
+    // Check if likes array already contains user ID
+    if (!post.likes.some((like) => like.id === req.user.id)) {
+      // If not in array, like
+      post.likes.unshift(req.user.id);
+    } else {
+      // If in array, unlike
+      post.likes = post.likes.filter(
+        (like) => like.id.toString() !== req.user.id
+      );
+    }
+
+    await post.save();
+
+    res.json(post);
+  } catch (err) {
+    console.error(err.message);
+
+    if (err.kind === 'ObjectId')
+      return res.status(400).json({ msg: 'Post not found' });
+
     res.status(500).send('Server Error');
   }
 });
