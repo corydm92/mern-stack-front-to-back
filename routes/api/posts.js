@@ -68,7 +68,7 @@ router.delete('/:post_id', auth, async (req, res) => {
     const postId = req.params.post_id;
 
     // Find post with matching user and post id
-    await Post.findOneAndDelete({ user: userId, id: postId });
+    await Post.findOneAndDelete({ user: userId, _id: postId });
 
     res.send('Post deleted');
   } catch (err) {
