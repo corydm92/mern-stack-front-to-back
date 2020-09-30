@@ -337,7 +337,6 @@ router.delete('/education/:education_id', auth, async (req, res) => {
       user: userID,
     });
 
-    // Using Mongoose pull method
     profile.education = profile.education.reduce((acc, current) => {
       if (current.id !== educationID) {
         return current;
