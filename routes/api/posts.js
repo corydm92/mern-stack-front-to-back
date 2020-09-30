@@ -43,13 +43,34 @@ router.post(
 );
 
 // @route   GET api/posts
-// @desc    Test Route
+// @desc    Get all posts
 // @access  Public
 router.get('/', async (req, res) => {
   try {
     const posts = await Post.find();
 
     res.json(posts);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   DELETE api/posts
+// @desc    Delete a post
+// @access  Private
+router.delete('/:post_id', auth, async (req, res) => {
+  try {
+    // Get User
+    const userId = req.user.id;
+
+    // Get Post ID
+    const postId = req.params.post_id;
+
+    // Find post with matching user and post id
+    await Post.findOneAndDelete({ user: userId, id: postId });
+
+    res.send('Post deleted');
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
