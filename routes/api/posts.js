@@ -86,8 +86,14 @@ router.delete('/:post_id', auth, async (req, res) => {
     // Get Post ID
     const postId = req.params.post_id;
 
-    // Find post with matching user and post id
-    await Post.findOneAndDelete({ user: userId, _id: postId });
+    const post = await Post.findById(postId);
+
+    // Must use toString to match type, without post.user is type object
+    if (userId !== post.user.toString()) {
+      return res.status(401).json({ msg: 'User Not Authorized' });
+    } else {
+      await post.remove(); // Make sure you are using the post assigned, not the Post model
+    }
 
     res.send('Post deleted');
   } catch (err) {
