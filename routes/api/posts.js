@@ -149,7 +149,7 @@ router.put('/:id/like', auth, async (req, res) => {
 // @desc    Comment on a post
 // @access  Private
 router.post(
-  '/posts/:id/comments',
+  '/:id/comments',
   [auth, [check('text', 'Text is required').notEmpty()]],
   async (req, res) => {
     const errors = validationResult(req);
@@ -159,8 +159,82 @@ router.post(
     }
 
     try {
-      res.send('comments route');
+      // Get current post
+      const post = await Post.findById(req.params.id);
+
+      // Handle if no post exists
+      if (!post) return res.status(400).json({ msg: 'Post not found' });
+
+      // Get logged in user data
+      const user = await User.findById(req.user.id);
+
+      // Create comment object
+      const commentObj = {
+        user: req.user.id,
+        text: req.body.text,
+        name: user.name,
+        avatar: user.avatar,
+      };
+
+      // Add comment object to comments array
+      post.comments.unshift(commentObj);
+
+      // Save post document
+      post.save();
+
+      res.json(post);
     } catch (err) {
+      if (err.kind === 'ObjectId')
+        return res.status(400).json({ msg: 'Post not found' });
+
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
+);
+
+// @route   DELETE api/posts/:id/comments/:id
+// @desc    Remove a comment on a post
+// @access  Private
+router.delete(
+  '/:id/comments',
+  [auth, [check('text', 'Text is required').notEmpty()]],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      // Get current post
+      const post = await Post.findById(req.params.id);
+
+      // Handle if no post exists
+      if (!post) return res.status(400).json({ msg: 'Post not found' });
+
+      // Get logged in user data
+      const user = await User.findById(req.user.id);
+
+      // Create comment object
+      const commentObj = {
+        user: req.user.id,
+        text: req.body.text,
+        name: user.name,
+        avatar: user.avatar,
+      };
+
+      // Add comment object to comments array
+      post.comments.unshift(commentObj);
+
+      // Save post document
+      post.save();
+
+      res.json(post);
+    } catch (err) {
+      if (err.kind === 'ObjectId')
+        return res.status(400).json({ msg: 'Post not found' });
+
       console.error(err.message);
       res.status(500).send('Server Error');
     }
