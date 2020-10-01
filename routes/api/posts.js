@@ -145,4 +145,26 @@ router.put('/:id/like', auth, async (req, res) => {
   }
 });
 
+// @route   POST api/posts/:id/comments
+// @desc    Comment on a post
+// @access  Private
+router.post(
+  '/posts/:id/comments',
+  [auth, [check('text', 'Text is required').notEmpty()]],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      res.send('comments route');
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
+);
+
 module.exports = router;
