@@ -180,7 +180,7 @@ router.post(
       post.comments.unshift(commentObj);
 
       // Save post document
-      post.save();
+      await post.save();
 
       res.json(post);
     } catch (err) {
