@@ -193,52 +193,44 @@ router.post(
   }
 );
 
-// @route   DELETE api/posts/:id/comments/:id
+// @route   DELETE api/posts/:post_id/comments/:comment_id
 // @desc    Remove a comment on a post
 // @access  Private
-router.delete(
-  '/:id/comments',
-  [auth, [check('text', 'Text is required').notEmpty()]],
-  async (req, res) => {
-    const errors = validationResult(req);
+router.delete('/:post_id/comments/:comment_id', auth, async (req, res) => {
+  try {
+    const { post_id, comment_id } = req.params;
+    const user_id = req.user.id;
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+    // Get current post
+    const post = await Post.findById(post_id);
 
-    try {
-      // Get current post
-      const post = await Post.findById(req.params.id);
+    // Handle if no post exists
+    if (!post) return res.status(400).json({ msg: 'Post not found' });
 
-      // Handle if no post exists
-      if (!post) return res.status(400).json({ msg: 'Post not found' });
+    const comment = post.comments.filter(
+      (comment) => comment.id === comment_id
+    )[0]; // Need to extract entry from array
 
-      // Get logged in user data
-      const user = await User.findById(req.user.id);
+    // Handle if no comment exists
+    if (!comment) return res.status(400).json({ msg: 'Comment not found' });
 
-      // Create comment object
-      const commentObj = {
-        user: req.user.id,
-        text: req.body.text,
-        name: user.name,
-        avatar: user.avatar,
-      };
+    console.log('user', typeof post.user);
+    console.log('comment', comment['_id']);
+    if (user_id !== post.user.toString() && user_id !== comment.id.toString())
+      return res
+        .status(401)
+        .json({ msg: 'Account not authroized to remove comment' });
+    // Save post document
+    // post.save();
 
-      // Add comment object to comments array
-      post.comments.unshift(commentObj);
+    res.json(comment);
+  } catch (err) {
+    if (err.kind === 'ObjectId')
+      return res.status(400).json({ msg: 'Post not found' });
 
-      // Save post document
-      post.save();
-
-      res.json(post);
-    } catch (err) {
-      if (err.kind === 'ObjectId')
-        return res.status(400).json({ msg: 'Post not found' });
-
-      console.error(err.message);
-      res.status(500).send('Server Error');
-    }
+    console.error(err.message);
+    res.status(500).send('Server Error');
   }
-);
+});
 
 module.exports = router;
