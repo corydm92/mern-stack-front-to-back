@@ -214,16 +214,25 @@ router.delete('/:post_id/comments/:comment_id', auth, async (req, res) => {
     // Handle if no comment exists
     if (!comment) return res.status(400).json({ msg: 'Comment not found' });
 
-    console.log('user', typeof post.user);
-    console.log('comment', comment['_id']);
-    if (user_id !== post.user.toString() && user_id !== comment.id.toString())
+    // If the user is not the owner of the post OR the comment, deny access
+    if (
+      user_id !== post.user.toString() &&
+      user_id !== comment.user.toString()
+    ) {
       return res
         .status(401)
         .json({ msg: 'Account not authroized to remove comment' });
-    // Save post document
-    // post.save();
+    }
 
-    res.json(comment);
+    // Remove the comment
+    post.comments = post.comments.filter(
+      (comment) => comment.id !== comment_id
+    );
+
+    // Save post document
+    post.save();
+
+    res.json(post);
   } catch (err) {
     if (err.kind === 'ObjectId')
       return res.status(400).json({ msg: 'Post not found' });
