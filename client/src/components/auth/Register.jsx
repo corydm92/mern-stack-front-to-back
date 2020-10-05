@@ -20,33 +20,7 @@ const Register = () => {
     if (password !== password2) {
       console.log('Passwords do not match');
     } else {
-      console.log(formData);
-      const newUser = {
-        name,
-        email,
-        password,
-      };
-
-      try {
-        // Part of course but unnecessary
-        // Axios serializes the object to JSON using the JSON.stringinfy() method
-        //
-        // const config = {
-        //   headers: {
-        //     'Content-Type': 'Application/json',
-        //   },
-        // };
-
-        // Part of course but unnecessary
-        // Express automatically converts the request body to a JavaScript object
-        //
-        // const body = JSON.stringify(newUser);
-
-        const res = await axios.post('/api/users', newUser);
-        console.log(res.data);
-      } catch (err) {
-        console.error(err.response.data);
-      }
+      console.log('Success');
     }
   };
 
