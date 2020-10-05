@@ -28,16 +28,25 @@ const Register = () => {
       };
 
       try {
-        const config = {
-          headers: {
-            'Content-Type': 'Application/json',
-          },
-        };
+        // Part of course but unnecessary
+        // Axios serializes the object to JSON using the JSON.stringinfy() method
+        //
+        // const config = {
+        //   headers: {
+        //     'Content-Type': 'Application/json',
+        //   },
+        // };
 
-        const body = JSON.stringify(newUser);
+        // Part of course but unnecessary
+        // Express automatically converts the request body to a JavaScript object
+        //
+        // const body = JSON.stringify(newUser);
 
-        const res = await axios.post('/api/users', body, config);
-      } catch (err) {}
+        const res = await axios.post('/api/users', newUser);
+        console.log(res.data);
+      } catch (err) {
+        console.error(err.response.data);
+      }
     }
   };
 
