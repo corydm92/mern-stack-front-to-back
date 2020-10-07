@@ -59,7 +59,7 @@ router.post(
 
       user.password = await bcrypt.hash(password, salt);
 
-      // await user.save();
+      await user.save();
 
       // Send JWT
 
