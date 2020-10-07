@@ -5,7 +5,7 @@ import { setAlert } from './alert';
 const BASE_URL = 'http://localhost:5000';
 
 // Register User
-export const register = ({ name, email, password }) => async (dispatch) => {
+export const register = (name, email, password) => async (dispatch) => {
   const config = {
     headers: {
       'Content-Type': 'application/json',
