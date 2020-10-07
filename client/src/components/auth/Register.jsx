@@ -18,15 +18,13 @@ const Register = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    props.setAlert('Test', 'Test');
+
     if (password !== password2) {
-      console.log('Passwords do not match');
+      props.setAlert('Passwords do not match', 'danger');
     } else {
       console.log('Success');
     }
   };
-
-  console.log(props);
 
   return (
     <React.Fragment>
@@ -90,12 +88,12 @@ const Register = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return { state };
-};
+// const mapStateToProps = (state) => {
+//   return { state };
+// };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, getState) => {
   return { setAlert: (msg, alertType) => dispatch(setAlert(msg, alertType)) };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Register);
+export default connect(null, mapDispatchToProps)(Register);
