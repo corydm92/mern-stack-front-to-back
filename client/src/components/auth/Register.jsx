@@ -94,7 +94,9 @@ const Register = ({ setAlert }) => {
 // };
 
 const mapDispatchToProps = (dispatch, getState) => {
-  return { setAlert: (msg, alertType) => dispatch(setAlert(msg, alertType)) };
+  return {
+    setAlert: (msg, alertType) => dispatch(setAlert(msg, alertType)),
+  };
 };
 
 Register.propTypes = {
