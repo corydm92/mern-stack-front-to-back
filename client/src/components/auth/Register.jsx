@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import { setAlert } from '../../actions/alert';
 
-const Register = () => {
+const Register = (props) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,12 +18,15 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    props.setAlert('Test', 'Test');
     if (password !== password2) {
       console.log('Passwords do not match');
     } else {
       console.log('Success');
     }
   };
+
+  console.log(props);
 
   return (
     <React.Fragment>
@@ -86,4 +90,12 @@ const Register = () => {
   );
 };
 
-export default Register;
+const mapStateToProps = (state) => {
+  return { state };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return { setAlert: (msg, alertType) => dispatch(setAlert(msg, alertType)) };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register);
