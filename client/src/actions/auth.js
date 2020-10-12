@@ -11,7 +11,6 @@ import setAuthToken from '../utils/setAuthToken';
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 // Load User
-
 export const loadUser = () => async (dispatch) => {
   if (localStorage.token) {
     setAuthToken(localStorage.token);
