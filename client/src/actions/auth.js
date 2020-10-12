@@ -1,5 +1,10 @@
 import axios from 'axios';
-import { REGISTER_SUCCESS, REGISTER_FAIL } from './types';
+import {
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
+  USER_LOADED,
+  AUTH_ERROR,
+} from './types';
 import { setAlert } from './alert';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
