@@ -22,7 +22,7 @@ export const register = (name, email, password) => async (dispatch) => {
       },
       config
     );
-    console.log(res);
+
     dispatch({ type: REGISTER_SUCCESS, payload: res.data });
   } catch (err) {
     const errors = err.response.data.errors;
