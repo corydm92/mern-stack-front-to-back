@@ -2,7 +2,7 @@ import axios from 'axios';
 import { REGISTER_SUCCESS, REGISTER_FAIL } from './types';
 import { setAlert } from './alert';
 
-const BASE_URL = 'http://localhost:5000';
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 // Register User
 export const register = (name, email, password) => async (dispatch) => {
