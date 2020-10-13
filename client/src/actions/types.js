@@ -10,6 +10,9 @@ export const REGISTER_FAIL = 'REGISTER_FAIL';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
 
+// LOGOUT USER
+export const LOGOUT = 'LOGOUT';
+
 // AUTH USER
 // AUTH_ERROR can be reused throughout the application, but specific errors should be more descriptive.
 export const USER_LOADED = 'USER_LOADED';

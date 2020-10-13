@@ -1,7 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { logout } from '../../actions/auth';
 
-const Navbar = () => {
+const Logout = ({ logout }) => {
+  return (
+    <Link onClick={() => logout()} to='/'>
+      Logout
+    </Link>
+  );
+};
+
+const Navbar = ({ isAuthenticated, logout }) => {
   return (
     <nav className='navbar bg-dark'>
       <h1>
@@ -13,15 +24,35 @@ const Navbar = () => {
         <li>
           <a href='!#'>Developers</a>
         </li>
-        <li>
-          <Link to='/register'>Register</Link>
-        </li>
-        <li>
-          <Link to='/login'>Login</Link>
-        </li>
+        {isAuthenticated ? (
+          <li>
+            <Logout logout={logout} />
+          </li>
+        ) : (
+          <>
+            <li>
+              <Link to='/register'>Register</Link>
+            </li>
+            <li>
+              <Link to='/login'>Login</Link>
+            </li>
+          </>
+        )}
       </ul>
     </nav>
   );
 };
 
-export default Navbar;
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
+
+Navbar.propTypes = {
+  isAuthenticated: PropTypes.bool,
+};
+
+Logout.propTypes = {
+  isAuthenticated: PropTypes.bool,
+};
+
+export default connect(mapStateToProps, { logout })(Navbar);
