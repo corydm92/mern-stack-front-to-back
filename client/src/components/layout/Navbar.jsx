@@ -4,14 +4,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from '../../actions/auth';
 
-const Logout = ({ logout }) => {
-  return (
-    <Link onClick={() => logout()} to='/'>
-      Logout
-    </Link>
-  );
-};
-
 const Navbar = ({ isAuthenticated, logout }) => {
   return (
     <nav className='navbar bg-dark'>
@@ -26,7 +18,9 @@ const Navbar = ({ isAuthenticated, logout }) => {
         </li>
         {isAuthenticated ? (
           <li>
-            <Logout logout={logout} />
+            <Link onClick={() => logout()} to='/'>
+              Logout
+            </Link>
           </li>
         ) : (
           <>
@@ -49,10 +43,7 @@ const mapStateToProps = (state) => ({
 
 Navbar.propTypes = {
   isAuthenticated: PropTypes.bool,
-};
-
-Logout.propTypes = {
-  isAuthenticated: PropTypes.bool,
+  logout: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, { logout })(Navbar);
