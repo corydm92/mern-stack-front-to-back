@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { login } from '../../actions/auth';
 
-const Login = () => {
+const Login = ({ login }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -15,7 +17,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log('Success');
+    login(email, password);
   };
 
   return (
@@ -55,4 +57,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default connect(null, { login })(Login);
