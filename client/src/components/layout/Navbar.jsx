@@ -29,6 +29,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
       </li>
     </ul>
   );
+
   return (
     <nav className='navbar bg-dark'>
       <h1>
@@ -37,7 +38,8 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
         </Link>
       </h1>
 
-      {!loading && isAuthenticated ? authLinks : guestLinks}
+      {/* Wrap ternary in parentheses to only run if !loading evaulates to true */}
+      {!loading && (isAuthenticated ? authLinks : guestLinks)}
     </nav>
   );
 };
