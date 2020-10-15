@@ -11,10 +11,14 @@ export const fetchSelfProfile = () => async (dispatch) => {
     dispatch({ type: PROFILE_SUCCESS, payload: res.data });
   } catch (err) {
     const errors = err.response.data.errors;
+
     console.log(err.response);
-    if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
-    }
-    dispatch({ type: PROFILE_FAIL });
+    // if (errors) {
+    //   errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    // }
+    dispatch({
+      type: PROFILE_FAIL,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
   }
 };
