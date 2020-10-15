@@ -8,9 +8,6 @@ export const fetchSelfProfile = () => async (dispatch) => {
   try {
     const res = await axios.get(`${BASE_URL}/api/profile/me`);
 
-    console.log(res);
-    console.log('here');
-
     dispatch({ type: PROFILE_SUCCESS, payload: res.data });
   } catch (err) {
     const errors = err.response.data.errors;
