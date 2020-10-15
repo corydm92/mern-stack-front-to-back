@@ -17,3 +17,7 @@ export const LOGOUT = 'LOGOUT';
 // AUTH_ERROR can be reused throughout the application, but specific errors should be more descriptive.
 export const USER_LOADED = 'USER_LOADED';
 export const AUTH_ERROR = 'AUTH_ERROR';
+
+// PROFILE
+export const PROFILE_SUCCESS = 'PROFILE_SUCCESS';
+export const PROFILE_FAIL = 'PROFILE_FAIL';
