@@ -4,6 +4,8 @@ import Landing from './components/layout/Landing';
 import Alert from './components/layout/Alert';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
+import Dashboard from './components/dashboard/Dashboard';
+import PrivateRoute from './components/routing/PrivateRoute';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 // Redux
 import { Provider } from 'react-redux';
@@ -31,6 +33,7 @@ const App = () => {
             <Switch>
               <Route exact path='/register' render={() => <Register />} />
               <Route exact path='/login' render={() => <Login />} />
+              <PrivateRoute exact path='/dashboard' component={Dashboard} />
             </Switch>
           </section>
         </React.Fragment>
