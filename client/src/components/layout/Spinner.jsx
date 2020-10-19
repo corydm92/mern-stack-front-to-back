@@ -2,6 +2,6 @@ import React, { Fragment } from 'react';
 
 export default () => {
   <Fragment>
-    <span>Loading...</span>
+    <span>Loading....</span>
   </Fragment>;
 };
